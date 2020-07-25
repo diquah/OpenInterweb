@@ -12,47 +12,28 @@ if m.address ~= MAC then --todo: disable this feature
 	IPv4 = nil
 end
 
-local function check_if_ip_taken(ip, End)
+local function check_if_ip_taken(ip)
 	local taken = false
-	local End = End or false
 	
-	local ipg_thread = thread.create(function()
-		local function listen()
-			taken = false --IPv4 cannot be claimed
-			event.cancel(canceltimer)
-			print("IP already assigned.")
-		end
-		
-		local function cancel()
-			print("canceltimer")
-			event.ignore("modem_message", listen) --ignore responses
-			ipg_thread:kill()
-		end
-		
-		local canceltimer = event.timer(4.5, cancel) --If no computer responds in 5 seconds
-		
-		m.broadcast(1, "computer_exists", tempip)
+	local function listen()
 		taken = true
-		
-		event.listen("modem_message", listen)
-	end)
-	
-	os.sleep(5)
-	ipg_thread:kill()
-	
-	if taken and End then
-		print("This IPv4 is already taken. Try generating a new IPv4 or choosing a different custom IPv4.")
-		os.exit()
 	end
+	
+	m.broadcast(1, "ping", ip)
+	event.listen("modem_message", listen)
+	
+	os.sleep(2.9)
+	event.ignore("modem_message", listen)
+	os.sleep(0.1)
 	
 	return taken
 end
 
 local function generate_ip(givenip)
-	local claimed = false
+	local claimed = true
 	local tempip = givenip or nil
 	
-	while not claimed do
+	while claimed do
 		if givenip == nil then
 			local ip4a = string.format("%.2d", tostring(math.random(1, 99)))
 			local ip4b = string.format("%.3d", tostring(math.random(1, 999)))
@@ -81,9 +62,27 @@ elseif IPv4 == nil and args[1] == nil then
 	MAC = m.address
 	print("This computer has claimed the IPv4 Address: " .. IPv4 .. " (MAC: " .. MAC .. ")")
 elseif IPv4 == nil and args[1] ~= nil then
-	IPv4 = check_if_ip_taken(args[1], true)
+	print("Checking for availability of IP: " .. args[1])
+	if check_if_ip_taken(args[1]) then
+		print(args[1] .. " is taken. Try submitting a different IP or run the network command without arguments.")
+		os.exit()
+	end
+	IPv4 = args[1]
 	MAC = m.address
 	print("This computer has claimed the IPv4 Address: " .. IPv4 .. " (MAC: " .. MAC .. ")")
 end
 
---ARP = {}
+--######################--
+
+local function recieve(_, _, from, port, _, ...)
+	local arg = {...}
+	if port == 1 then
+		if arg[1] == "ping"	 then
+			if IPv4 == arg[2] then
+				m.send(from, 1, "ping_response")
+			end
+		end
+	end
+end
+	
+event.listen("modem_message", recieve)
