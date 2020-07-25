@@ -45,6 +45,6 @@ elseif args[1] == 'ping' then
 		ping(args[2])
 		os.exit()
 	else
-		print(ping(args[2]))
+		print(ping(args[2], args[3]))
 	end
 end
