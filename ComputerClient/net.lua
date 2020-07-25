@@ -20,8 +20,7 @@ local function ping(ip, mode)
 	local _, _, from, port, _, message = event.pull(3, "modem_message")
 	
 	if mode == 'value' then
-		print("\n			- PING -")
-		print("From IPv4	.	.	" .. ip)
+		print("\nFrom IPv4	.	.	" .. ip)
 		print("From MAC	.	.	.	" .. from)
 		print("Port	.	.	.	.	.	" .. port)
 		print("Message	.	.	.	" .. message .. "\n")
