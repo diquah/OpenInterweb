@@ -1,5 +1,5 @@
 # OpenInterweb
-***THIS PROJECT'S CORE CODE IS STILL UNDER DEVELOPMENT***
+![](https://img.shields.io/badge/build-alpha-yellowgreen) ![](https://img.shields.io/badge/license-CC%20BY--NC--SA%202.0-blue)
 
 An open source internet system for the Minecraft OpenComputers mod. The system is modeled after the real world Internet Protocols. Some features in this software set include:
 
