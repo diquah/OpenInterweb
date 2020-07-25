@@ -7,18 +7,16 @@ local m = component.modem
 local args={...}
 m.open(1)
 
-if #args == 0 then
-	if IPv4 ~= nil then
-		print("\nIPv4	.	.	.	.	" .. IPv4)
-		print("MAC	.	.	.	.	" .. MAC .. "\n")
-	else
-		print("This computer has not signed an IPv4 address. To do so, run: 'ipconfig -S'")
-	end
-elseif args[1] == '-S' then
-	if m.address ~= MAC then --todo: disable this feature
-		IPv4 = nil
-	end
+if m.address ~= MAC then --todo: disable this feature
+	MAC = m.address
+	IPv4 = nil
+end
 
+if #args == 0 then
+	local ipv4 = IPv4 or " "
+	print("\nIPv4	.	.	.	.	" .. ipv4)
+	print("MAC	.	.	.	.	" .. MAC .. "\n")
+elseif args[1] == '-S' then
 	local function check_if_ip_taken(ip)
 		local taken = false
 		
@@ -93,7 +91,6 @@ elseif args[1] == '-S' then
 			os.exit()
 		end
 		IPv4 = args[2]
-		MAC = m.address
 		print("This computer has claimed the IPv4 Address: " .. IPv4 .. " (MAC: " .. MAC .. ")")
 	end
 end -- end if arg 1
@@ -110,3 +107,5 @@ local function recieve(_, _, from, port, _, ...)
 end
 		
 event.listen("modem_message", recieve)
+
+ARP = ARP or {{"localhost", IPv4, MAC}}
