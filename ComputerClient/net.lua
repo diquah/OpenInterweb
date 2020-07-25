@@ -47,4 +47,26 @@ elseif args[1] == 'ping' then
 	else
 		print(ping(args[2], args[3]))
 	end
+elseif args[1] == 'arp' then
+	print("\nALIAS	.	.	.	 IPv4	.	.	.	.	.	.	.	MAC")
+	print("---------------------------------------")
+	for i, v in pairs(ARP) do
+		print(string.format("%s	.	.	%s	.	.	%s", v[1], v[2], v[3]))
+	end
+	print()
+elseif args[1] == 'stat' then
+	if args[2] == nil then
+		
+	elseif args[2] == 'port' then
+		print("\nScanning for open ports...")
+		local ret = ""
+		for i=1, 65535 do
+			if m.isOpen(i) then
+				ret = ret .. tostring(i) .. ", "
+			end
+		end
+		print("\n{" .. ret:sub(1, -3) .. "}\n")
+	end
+else
+	print("Invalid command.")
 end
