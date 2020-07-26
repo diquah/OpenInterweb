@@ -93,6 +93,7 @@ elseif args[1] == '-S' then
 		IPv4 = args[2]
 		print("This computer has claimed the IPv4 Address: " .. IPv4 .. " (MAC: " .. MAC .. ")")
 	end
+	ARP = ARP or {{"localhost", IPv4, MAC}}
 end -- end if arg 1
 
 local function recieve(_, _, from, port, _, ...)
@@ -107,5 +108,3 @@ local function recieve(_, _, from, port, _, ...)
 end
 		
 event.listen("modem_message", recieve)
-
-ARP = ARP or {{"localhost", IPv4, MAC}}
