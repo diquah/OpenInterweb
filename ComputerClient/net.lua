@@ -48,6 +48,10 @@ elseif args[1] == 'ping' then
 		print(ping(args[2], args[3]))
 	end
 elseif args[1] == 'arp' then
+	if ARP == nil then
+		print("ARP table has not been initialized. Cannot run command.")
+		os.exit()
+	end
 	print("\nALIAS	.	.	.	 IPv4	.	.	.	.	.	.	.	MAC")
 	print("---------------------------------------")
 	for i, v in pairs(ARP) do
