@@ -105,7 +105,7 @@ local function recieve(_, _, from, port, _, ...)
 			end
 		elseif arg[1] == "dirPing" then
 			if ARP ~= nil then
-				ARP[#ARP+1] = {"", arg[2], from}
+				ARP[#ARP+1] = {nil, arg[2], from}
 			end
 			m.send(from, 1, "ping_response")
 		end
