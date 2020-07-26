@@ -1,5 +1,5 @@
 # OpenInterweb
-![](https://img.shields.io/badge/build-unfinished-yellowgreen)
+![](https://img.shields.io/badge/build-indev-yellowgreen)
 ![](https://img.shields.io/badge/coverage-100%25-success)
 ![](https://img.shields.io/badge/license-CC%20BY--NC--SA%202.0-blue)
 
