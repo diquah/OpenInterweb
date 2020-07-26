@@ -24,7 +24,7 @@ elseif args[1] == '-S' then
 			taken = true
 		end
 		
-		m.broadcast(1, "ping", ip)
+		m.broadcast(1, "find", ip)
 		event.listen("modem_message", listen)
 		
 		os.sleep(2.9)
@@ -99,10 +99,15 @@ end -- end if arg 1
 local function recieve(_, _, from, port, _, ...)
 	local arg = {...}
 	if port == 1 then
-		if arg[1] == "ping"	 then
+		if arg[1] == "find"	 then
 			if IPv4 == arg[2] then
 				m.send(from, 1, "ping_response")
 			end
+		elseif arg[1] == "dirPing" then
+			if ARP ~= nil then
+				ARP[#ARP+1] = {nil, arg[2], from}
+			end
+			m.send(from, 1, "ping_response")
 		end
 	end
 end

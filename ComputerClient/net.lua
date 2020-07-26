@@ -9,18 +9,42 @@ if not m.isOpen(1) then
 	m.open(1)
 end
 
-local function ping(ip, mode)
-	if ip == nil then
+local function ping(addr, mode)
+	if addr == nil then
 		print("Cannot ping nil IPv4.")
 		os.exit()
 	end
+	
 	local mode = mode or 'value'
 	
-	m.broadcast(1, "ping", ip)
+	local mac = nil
+	if ARP then
+		for i, v in pairs(ARP) do
+			if (v[1] == addr or v[2] == addr or v[3] == addr) then
+				mac = v[3]
+				break
+			end
+		end
+	end
+	
+	if mac == nil then
+		m.broadcast(1, "find", addr)
+	else
+		if IPv4 == nil then
+			print("Register an IPv4 before using direct ping.")
+			os.exit()
+		end
+		m.send(mac, 1, "dirPing", IPv4)
+	end
+	
 	local _, _, from, port, _, message = event.pull(3, "modem_message")
 	
+	if mac == nil then
+		ARP[#ARP+1] = {nil, addr, from}
+	end
+	
 	if mode == 'value' then
-		print("\nFrom IPv4	.	.	" .. ip)
+		print("\nFrom IPv4	.	.	" .. addr)
 		print("From MAC	.	.	.	" .. from)
 		print("Port	.	.	.	.	.	" .. port)
 		print("Message	.	.	.	" .. message .. "\n")
@@ -52,10 +76,16 @@ elseif args[1] == 'arp' then
 		print("ARP table has not been initialized. Cannot run command.")
 		os.exit()
 	end
-	print("\nALIAS	.	.	.	 IPv4	.	.	.	.	.	.	.	MAC")
+	print("\nALIAS,    IPv4,    MAC")
 	print("---------------------------------------")
 	for i, v in pairs(ARP) do
-		print(string.format("%s	.	.	%s	.	.	%s", v[1], v[2], v[3]))
+		local one = nil
+		if v[1] == nil then
+			one = "N/A"
+		else
+			one = v[1]
+		end
+		print(string.format("%s,    %s,    %s", v[1], v[2], v[3]))
 	end
 	print()
 elseif args[1] == 'stat' then
