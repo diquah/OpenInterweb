@@ -14,7 +14,7 @@ local function printTable()
 		print("This computer has not been configured.") -- cannot give ipconfig if PC has not been assigned an IP.
 		return
 	end
-	print("\nIPv4	.	.	.	.	" .. IP)
+	print("\nIP	.	.	.	.	" .. IP)
 	print("MAC	.	.	.	.	" .. MAC .. "\n")
 end
 
@@ -25,14 +25,12 @@ end
 
 --== BEGIN CODE ==--
 
-if MAC == nil then -- if OpenInterweb has not been installed before.
-	MAC = m.address
-	IP = nil
-end
-
 if #args == 0 then
 	printTable()
 elseif args[1] == 'assign' then -- configure PC to use OpenInterweb
+	if IP ~= nil then
+		os.exit() -- cannot assign IP to already assigned computer.
+	end
 	local obtainedIP = false
 
 	while obtainedIP == false do
@@ -50,4 +48,6 @@ elseif args[1] == 'assign' then -- configure PC to use OpenInterweb
 		end
 	end
 	printTable()
+
+	ARP = ARP or {{IP, MAC}} --initialize ARP table.
 end
