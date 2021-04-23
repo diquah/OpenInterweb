@@ -13,7 +13,8 @@ end
 local FILES = {"ipconfig", "net"}
 
 for i, v in pairs(FILES) do
-    local handle, data, chunk = component.proxy(component.list("internet")()).request("https://raw.githubusercontent.com/rubycookinson/OpenInterweb/master/ComputerClient/" .. v .. ".lua"), ""
+    local handle, data, chunk = component.proxy(component.list("internet")()).request(
+        "https://raw.githubusercontent.com/rubycookinson/OpenInterweb/master/ComputerClient/" .. v .. ".lua"), ""
     
     while true do
         chunk = handle.read(math.huge)
