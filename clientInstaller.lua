@@ -10,11 +10,11 @@ end
 
 --== COMPUTER CLIENT INSTALLER ==--
 
-local FILES = {"ipconfig", "net"}
+local FILES = {"iweb", "ipconfig"}
 
 for i, v in pairs(FILES) do
     local handle, data, chunk = component.proxy(component.list("internet")()).request(
-        "https://raw.githubusercontent.com/rubycookinson/OpenInterweb/master/ComputerClient/" .. v .. ".lua"), ""
+        "https://raw.githubusercontent.com/rubycookinson/OpenInterweb/v2/ComputerClient/" .. v .. ".lua"), ""
     
     while true do
         chunk = handle.read(math.huge)
@@ -33,4 +33,6 @@ for i, v in pairs(FILES) do
     file:close()
 end
 
-print("Installation Complete!")
+dofile("iweb")
+
+print("\nInstallation Complete!\n")

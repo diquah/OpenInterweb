@@ -20,7 +20,7 @@ end
 
 local function isIpTaken(ip) --broadcasts a message asking if anyone is named with that ip
 	iweb.broadcast(1, "find", ip)
-	return true
+	return false
 end
 
 --== BEGIN CODE ==--
