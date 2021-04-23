@@ -44,7 +44,7 @@ elseif args[1] == 'assign' then -- configure PC to use OpenInterweb
 			attemptedIP = tostring(args[2])
 		end
 
-		if isIpTaken() == false then
+		if isIpTaken(attemptedIP) == false then
 			obtainedIP = true
 			IP = attemptedIP
 		end
