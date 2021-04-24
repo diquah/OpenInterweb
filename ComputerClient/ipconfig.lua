@@ -33,9 +33,9 @@ end
 if #args == 0 then
 	printTable()
 elseif args[1] == 'assign' then -- configure PC to use OpenInterweb
-	if IP ~= nil then
-		os.exit() -- cannot assign IP to already assigned computer.
-	end
+	--if IP ~= nil then
+		--os.exit() -- cannot assign IP to already assigned computer.
+	--end
 	local obtainedIP = false
 
 	while obtainedIP == false do
