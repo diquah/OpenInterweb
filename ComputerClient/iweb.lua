@@ -26,6 +26,7 @@ function iweb.sendData(ip, port, ...)
 end
 
 function iweb.ARPsearch(key) --find MAC of IP in ARP table.
+	if ARP == nil then return end
 	for i, v in pairs(ARP) do
 		if v[1] == key then
 			return v[2]
@@ -57,7 +58,7 @@ end
 
 --== Simple/Low-Level Stuff ==--
 
-local function modem_message(_, _, from, port, _, ...):
+local function lowLevelMessageHandler(_, _, from, port, _, ...)
 	if iweb.ARPsearch(from) == nil then
 		sendDataToMAC(from, 1, "identify") --ask an unknown MAC what their IP is
 	end
@@ -71,4 +72,4 @@ local function modem_message(_, _, from, port, _, ...):
 	end
 end
 
-event.listen("modem_message", modem_message)
+event.listen("modem_message", lowLevelMessageHandler)
