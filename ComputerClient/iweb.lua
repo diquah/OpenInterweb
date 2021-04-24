@@ -8,14 +8,67 @@ if MAC == nil then -- if OpenInterweb has not been installed before.
 	IP = nil
 end
 
+m.open(1)
+
+--== LOCAL FUNCTIONS ==--
+
+local function sendDataToMAC(mac, port, ...)
+	m.send(mac, port, arg)
+end
+
 --== iWEB FUNCTIONS ==--
 
 iweb = {}
 
-function iweb.ping(ip) -- ping should automatically use port 1
-	print(ip)
+function iweb.sendData(ip, port, ...)
+	local macToSend = iweb.ARPsearch(ip)
+	sendDataToMAC(macToSend, port, arg)
+end
+
+function iweb.ARPsearch(key) --find MAC of IP in ARP table.
+	for i, v in pairs(ARP) do
+		if v[1] == key then
+			return v[2]
+		else if v[2] == key then
+			return v[1]
+		end
+	end
+	return nil
+end
+
+function iweb.addToARP(ip, mac)
+	ARP[#ARP+1] = {ip, mac}
+end
+
+function iweb.ping(ip, timeout) -- ping should automatically use port 1
+	timeout = timeout or 3
+	local macToSend = iweb.ARPsearch(ip)
+	iweb.sendData(ip, 1, "ping")
+	_, _, from, port, _, msg = event.pull(3, "modem_message")
+	if msg == "return_ping" then -- if recieved a response
+		return true
+	end
+	return false
 end
 
 function iweb.broadcast(port, ...)
-	print(port, ...)
+	m.broadcast(port, arg)
 end
+
+--== Simple/Low-Level Stuff ==--
+
+local function modem_message(_, _, from, port, _, ...):
+	if iweb.ARPsearch(from) == nil then
+		sendDataToMAC(from, 1, "identify") --ask an unknown MAC what their IP is
+	end
+	if arg[1] == "ping" then
+		sendDataToMAC(from, 1, "return_ping")
+	elseif arg[1] == "identify" and IP ~= nil then --return IP for computer asking what IP belongs to this MAC
+		sendDataToMAC(from, 1, "return_identify", IP)
+		iweb.addToARP(arg[2], from)
+	elseif arg[1] == "return_identify" then
+		iweb.addToARP(arg[2], from)
+	end
+end
+
+event.listen("modem_message", modem_message)

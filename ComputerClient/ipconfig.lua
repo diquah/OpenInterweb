@@ -20,6 +20,10 @@ end
 
 local function isIpTaken(ip) --broadcasts a message asking if anyone is named with that ip
 	iweb.broadcast(1, "find", ip)
+	local _, _, from, port, _, message = event.pull(3, "modem_message")
+	if message == "ping" then
+		return true
+	end
 	return false
 end
 
