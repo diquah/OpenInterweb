@@ -26,11 +26,13 @@ function iweb.sendData(ip, port, ...)
 end
 
 function iweb.ARPsearch(key) --find MAC of IP in ARP table.
-	if ARP == nil then return end
+	if ARP == nil then
+		return
+	end
 	for i, v in pairs(ARP) do
 		if v[1] == key then
 			return v[2]
-		else if v[2] == key then
+		elseif v[2] == key then
 			return v[1]
 		end
 	end
@@ -62,6 +64,7 @@ local function lowLevelMessageHandler(_, _, from, port, _, ...)
 	if iweb.ARPsearch(from) == nil then
 		sendDataToMAC(from, 1, "identify") --ask an unknown MAC what their IP is
 	end
+
 	if arg[1] == "ping" then
 		sendDataToMAC(from, 1, "return_ping")
 	elseif arg[1] == "identify" and IP ~= nil then --return IP for computer asking what IP belongs to this MAC
