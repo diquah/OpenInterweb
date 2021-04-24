@@ -59,6 +59,7 @@ end
 --== Simple/Low-Level Stuff ==--
 
 local function lowLevelMessageHandler(_, _, from, port, _, ...)
+	print(args[1])
 	if iweb.ARPsearch(from) == nil then
 		sendDataToMAC(from, 1, "identify") --ask for a MAC not in ARP what their IP is
 	end
