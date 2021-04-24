@@ -4,13 +4,9 @@
 
 An open source internet system for the Minecraft OpenComputers mod. Some features in this software set include:
 
- - Use of IP address names to connect to physical MAC addresses (the default network card address)
- - Making of Local Area Networks
- - Use of more Internet Protocols such as:
-	 - File Transfer Protocol
-	 - HTTPS (Encrypted communication between any two computers)
-	 - and more.
+ - Custom send/recieve functions and events using nicknames instead of the network card IDs (IP vs MACs)
+ - Use of more data transfer protocols (Like FTP)
 
-Install ComputerClient using:
+ComputerClient installation command (OpenOS):
 
     pastebin run sCgrPuXH

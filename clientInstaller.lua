@@ -1,13 +1,5 @@
 local component = component or require("component")
 
---== RUBY'S UTITLY INSTALLER ==--
-
-rUtil = {}
-
-function rUtil.ljust(string, num)
-    return string.format("%" .. num .. "s", string)
-end
-
 --== COMPUTER CLIENT INSTALLER ==--
 
 local FILES = {"iweb", "ipconfig"}
