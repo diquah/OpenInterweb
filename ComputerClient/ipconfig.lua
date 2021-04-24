@@ -21,7 +21,7 @@ end
 local function isIpTaken(ip) --broadcasts a message asking if anyone is named with that ip
 	iweb.broadcast(1, "find", ip)
 	local _, _, from, port, _, message = event.pull(3, "modem_message")
-	if message == "ping" then
+	if message == "return_find" then
 		return true
 	end
 	return false
@@ -41,7 +41,7 @@ elseif args[1] == 'assign' then -- configure PC to use OpenInterweb
 		local attemptedIP = nil
 
 		if args[2] == nil then -- if no name is given, generate one.
-			attemptedIP = tostring(math.random(1, 65536)) -- 16 bit integer limit.	
+			attemptedIP = string.format("%.5d", tostring(math.random(1, 65536))) -- 16 bit integer limit.	
 		else -- use the given name
 			attemptedIP = tostring(args[2])
 		end
@@ -53,5 +53,5 @@ elseif args[1] == 'assign' then -- configure PC to use OpenInterweb
 	end
 	printTable()
 
-	ARP = ARP or {{IP, MAC}} --initialize ARP table.
+	ARP = {{IP, MAC}} --initialize ARP table.
 end

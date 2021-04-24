@@ -36,7 +36,6 @@ function iweb.ARPsearch(key) --find MAC of IP in ARP table.
 			return v[1]
 		end
 	end
-	return nil
 end
 
 function iweb.addToARP(ip, mac)
@@ -45,7 +44,6 @@ end
 
 function iweb.ping(ip, timeout) -- ping should automatically use port 1
 	timeout = timeout or 3
-	local macToSend = iweb.ARPsearch(ip)
 	iweb.sendData(ip, 1, "ping")
 	_, _, from, port, _, msg = event.pull(3, "modem_message")
 	if msg == "return_ping" then -- if recieved a response
@@ -62,16 +60,17 @@ end
 
 local function lowLevelMessageHandler(_, _, from, port, _, ...)
 	if iweb.ARPsearch(from) == nil then
-		sendDataToMAC(from, 1, "identify") --ask an unknown MAC what their IP is
+		sendDataToMAC(from, 1, "identify") --ask for a MAC not in ARP what their IP is
 	end
 
 	if arg[1] == "ping" then
 		sendDataToMAC(from, 1, "return_ping")
 	elseif arg[1] == "identify" and IP ~= nil then --return IP for computer asking what IP belongs to this MAC
 		sendDataToMAC(from, 1, "return_identify", IP)
-		iweb.addToARP(arg[2], from)
 	elseif arg[1] == "return_identify" then
 		iweb.addToARP(arg[2], from)
+	elseif arg[1] == "find" then
+		iweb.sendDataToMAC(from, 1, "return_find")
 	end
 end
 
