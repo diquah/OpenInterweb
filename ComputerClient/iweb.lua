@@ -69,7 +69,7 @@ local function lowLevelMessageHandler(_, _, from, port, _, ...)
 		sendDataToMAC(from, 1, "return_identify", IP)
 	elseif arg[1] == "return_identify" then
 		iweb.addToARP(arg[2], from)
-	elseif arg[1] == "find" then
+	elseif arg[1] == "find" and arg[2] == IP then
 		iweb.sendDataToMAC(from, 1, "return_find")
 	end
 end
